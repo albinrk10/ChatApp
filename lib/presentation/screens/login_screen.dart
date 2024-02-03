@@ -1,4 +1,7 @@
+import 'package:chat_app/presentation/providers/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,13 +19,14 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 const Logo( titulo: 'Messenger',),
+                const Logo(
+                  titulo: 'Messenger',
+                ),
                 _Form(),
-                const Labels( 
-                   labelAsk: '¿No tienes Cuenta?',
-                   labelRoute: 'Crea una ahora!',
-                  ruta: '/register'
-                  ),
+                const Labels(
+                    labelAsk: '¿No tienes Cuenta?',
+                    labelRoute: 'Crea una ahora!',
+                    ruta: '/register'),
                 const Text(
                   'Términos y condiciones de uso',
                   style: TextStyle(fontWeight: FontWeight.w200),
@@ -46,6 +50,7 @@ class __FormState extends State<_Form> {
   final passwordCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -64,11 +69,26 @@ class __FormState extends State<_Form> {
             isPassword: true,
           ),
           //Crear boton
-           BotonAzul(
-            text: 'Ingrese', 
-            onPressed: () {
-            
-           },)
+          BotonAzul(
+            text: 'Ingrese',
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passwordCtrl.text.trim());
+                    if (loginOk) {
+                      //conectar a nuestro socket server
+                      //Navegar a otra pantalla go router
+                      context.push('/usuarios');
+                    } else {
+                      //Mostrar alerta
+                      mostrarAlerta(context, 'Login incorrecto',
+                          'Revise sus credenciales nuevamente');
+                    }
+                  },
+          )
         ],
       ),
     );

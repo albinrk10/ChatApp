@@ -1,4 +1,7 @@
+import 'package:chat_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../infrastructure/infrastructure.dart';
 
@@ -20,18 +23,24 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   ];
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    final usuario = authService.usuario; 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Mi Nombre',
-          style: TextStyle(color: Colors.black87),
+        title:  Text(
+          usuario?.nombre ?? 'Sin Nombre' ,
+          style: const TextStyle(color: Colors.black87),
         ),
         centerTitle: true,
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.exit_to_app, color: Colors.black87),
-          onPressed: () {},
+          onPressed: () {
+            //TODO: Desconectar el socket server
+            AuthService.deleteToken();
+            context.push('/login');
+          },
         ),
         actions: [
           Container(

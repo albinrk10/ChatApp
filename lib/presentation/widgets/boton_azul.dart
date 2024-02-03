@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class BotonAzul extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  //  final Function()? onPressed;
   const BotonAzul({super.key,  required this.text, required this.onPressed});
 
   @override
@@ -10,7 +11,9 @@ class BotonAzul extends StatelessWidget {
     return ElevatedButton(
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(2),
-            backgroundColor: MaterialStateProperty.all(Colors.blue),
+            backgroundColor: MaterialStateProperty.all(
+              onPressed != null ? const Color(0xff0575E6) : Colors.grey.withOpacity(0.5),
+            ),
             shape: MaterialStateProperty.all(const StadiumBorder()),
           ),
           onPressed: onPressed,

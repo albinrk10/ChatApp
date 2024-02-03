@@ -1,4 +1,7 @@
+import 'package:chat_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../widgets/widgets.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -22,7 +25,7 @@ class RegisterScreen extends StatelessWidget {
                 _Form(),
                 const Labels(
                   labelAsk: '¿Ya tienes cuenta?',
-                   labelRoute: 'Ingresa ahora!',
+                  labelRoute: 'Ingresa ahora!',
                   ruta: '/login',
                 ),
                 const Text(
@@ -44,13 +47,13 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
-
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -75,9 +78,29 @@ class __FormState extends State<_Form> {
           ),
           //Crear boton
           BotonAzul(
-            text: 'Ingrese',
-            onPressed: () {},
-          )
+              text: 'Crear cuenta',
+              onPressed: authService.autenticando
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus();
+                      print(nameCtrl.text);
+                      print(emailCtrl.text);
+                      print(passwordCtrl.text);
+
+                      final registerOk = await authService.register(
+                          nameCtrl.text.trim(),
+                          emailCtrl.text.trim(),
+                          passwordCtrl.text.trim());
+                          
+                      if (registerOk == true) {
+                        //conectar a nuestro socket server
+                        //Navegar a otra pantalla go router
+                        context.push('/usuarios');
+                      } else {
+                        //Mostrar alerta
+                        mostrarAlerta(context, 'Registro incorrecto', registerOk);
+                      }
+                    })
         ],
       ),
     );

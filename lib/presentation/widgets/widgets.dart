@@ -3,3 +3,4 @@ export 'logo.dart';
 export 'labels.dart';
 export 'boton_azul.dart';
 export 'chat_message.dart';
+export 'shared/mostrar_alerta.dart';
