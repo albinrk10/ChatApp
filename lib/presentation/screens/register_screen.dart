@@ -54,6 +54,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -93,7 +94,7 @@ class __FormState extends State<_Form> {
                           passwordCtrl.text.trim());
                           
                       if (registerOk == true) {
-                        //conectar a nuestro socket server
+                        socketService.connect();
                         //Navegar a otra pantalla go router
                         context.push('/usuarios');
                       } else {

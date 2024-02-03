@@ -1,7 +1,7 @@
-import 'package:chat_app/presentation/providers/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../providers/providers.dart';
 import '../widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -51,6 +51,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -79,7 +80,7 @@ class __FormState extends State<_Form> {
                     final loginOk = await authService.login(
                         emailCtrl.text.trim(), passwordCtrl.text.trim());
                     if (loginOk) {
-                      //conectar a nuestro socket server
+                      socketService.connect();
                       //Navegar a otra pantalla go router
                       context.push('/usuarios');
                     } else {
