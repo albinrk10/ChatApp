@@ -99,7 +99,9 @@ class __FormState extends State<_Form> {
                         context.push('/usuarios');
                       } else {
                         //Mostrar alerta
-                        mostrarAlerta(context, 'Registro incorrecto', registerOk);
+                        // mostrarAlerta(context, 'Registro incorrecto', registerOk);
+                        mostrarAlerta(context, 'Registro incorrecto', 'Ya existe un usuario con ese correo o llene los campos correctamente');
+                        // context.push('/login');
                       }
                     })
         ],

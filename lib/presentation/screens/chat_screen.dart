@@ -1,3 +1,4 @@
+import 'package:chat_app/infrastructure/infrastructure.dart';
 import 'package:chat_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     socketService = Provider.of<SocketService>(context, listen: false);
     authService = Provider.of<AuthService>(context, listen: false);
     socketService.socket.on('mensaje-personal', _escucharMensaje);
+
+    _cargarHistorial(chatService.usuarioPara.uid);
   }
 
+  void _cargarHistorial( String usuarioID)async{
+    List<Mensaje> chat = await chatService.getChat(usuarioID);
+    final history = chat.map((m) => ChatMessage(
+      texto: m.mensaje,
+      uid: m.de,
+      animationController: AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 0),
+      )..forward(),
+    ));
+
+    setState(() {
+      _messages.insertAll(0, history);
+    });
+  }
   void _escucharMensaje(dynamic payload) {
     print(payload['mensaje']);
     ChatMessage message = ChatMessage(
@@ -153,7 +171,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _textController.clear();
     _focusNode.requestFocus();
     final newMessage = ChatMessage(
-      uid: '123',
+      uid: authService.usuario.uid,
       texto: text,
       animationController: AnimationController(
           vsync: this, duration: const Duration(milliseconds: 200)),
