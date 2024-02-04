@@ -2,9 +2,9 @@
 
 A new Flutter project.
 
-## Getting Started
+## El backend lo pueden obtener de aquí
 
-This project is a starting point for a Flutter application.
+[ Backend - Nodejs RestServer] https://github.com/albinrk10/ChatApp_Backend
 
 A few resources to get you started if this is your first Flutter project:
 
